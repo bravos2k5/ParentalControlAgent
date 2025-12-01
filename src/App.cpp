@@ -4,7 +4,7 @@
 #include <sstream>
 
 const std::string App::EMERGENCY_PASSWORD = "emergency123";
-const std::string App::WS_ENDPOINT = "wss://example.yourdomain.com/ws/";
+const std::string App::WS_ENDPOINT = "wss://api.bravos.io.vn/ws/";
 
 App::App() {
     m_overlay = std::make_unique<OverlayWindow>();

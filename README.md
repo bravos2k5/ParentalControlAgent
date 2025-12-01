@@ -97,6 +97,8 @@ ParentalControlAgent/
 ├── CMakeLists.txt          # Build configuration
 ├── README.md
 ├── LICENSE
+├── install.bat             # Install as startup task (run as admin)
+├── uninstall.bat           # Remove startup task (run as admin)
 ├── resources/
 │   └── app.rc              # Windows resources
 ├── src/
@@ -108,6 +110,25 @@ ParentalControlAgent/
 │   ├── DeviceInfo.cpp/h    # Device identification
 │   └── Logger.cpp/h        # Logging utility
 └── build/                  # Build output (generated)
+```
+
+## Installation
+
+After building, you can install the agent to run automatically at startup:
+
+```powershell
+# Run as Administrator
+.\install.bat
+```
+
+This creates a Windows scheduled task that:
+- Starts the agent when any user logs in
+- Runs with administrator privileges
+
+To uninstall:
+```powershell
+# Run as Administrator
+.\uninstall.bat
 ```
 
 ## License
