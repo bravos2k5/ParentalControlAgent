@@ -7,7 +7,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     (void)lpCmdLine;
     (void)nCmdShow;
     
-    // Initialize logger
     char logPath[MAX_PATH];
     GetModuleFileNameA(nullptr, logPath, MAX_PATH);
     std::string logPathStr(logPath);
@@ -21,7 +20,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
     LOG_INFO("Application starting");
     LOG_INFO("Log file: " + logPathStr);
     
-    // Create and run application
     App app;
     
     if (!app.initialize(hInstance)) {

@@ -210,7 +210,6 @@ void OverlayWindow::setState(State state) {
 }
 
 void OverlayWindow::setNotificationText(const std::string& text) {
-    // Convert UTF-8 to wide string
     int len = MultiByteToWideChar(CP_UTF8, 0, text.c_str(), -1, nullptr, 0);
     m_notificationText.resize(len - 1);
     MultiByteToWideChar(CP_UTF8, 0, text.c_str(), -1, &m_notificationText[0], len);
@@ -271,6 +270,11 @@ LRESULT CALLBACK OverlayWindow::LowLevelKeyboardProc(int nCode, WPARAM wParam, L
             if (kbStruct->vkCode == VK_TAB || kbStruct->vkCode == VK_ESCAPE || kbStruct->vkCode == VK_F4) {
                 block = true;
             }
+        }
+
+        // Block shift key alone (to prevent sticky keys)
+        if (kbStruct->vkCode == VK_SHIFT) {
+            block = true;
         }
         
         // Block Ctrl+Esc (Start menu)

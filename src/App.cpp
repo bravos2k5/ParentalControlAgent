@@ -4,7 +4,7 @@
 #include <sstream>
 
 const std::string App::EMERGENCY_PASSWORD = "emergency123";
-const std::string App::WS_ENDPOINT = "wss://api.bravos.io.vn/ws/";
+const std::string App::WS_ENDPOINT = "wss://example.yourdomain.com/ws/";
 
 App::App() {
     m_overlay = std::make_unique<OverlayWindow>();
@@ -17,8 +17,6 @@ App::~App() {
 }
 
 bool App::initialize(HINSTANCE hInstance) {
-    LOG_INFO("Initializing application");
-    
     // Check for single instance using mutex
     m_mutex = CreateMutexW(nullptr, FALSE, L"ParentalControlAgentMutex");
     if (m_mutex == nullptr) {
@@ -28,7 +26,6 @@ bool App::initialize(HINSTANCE hInstance) {
     
     DWORD waitResult = WaitForSingleObject(m_mutex, 0);
     if (waitResult != WAIT_OBJECT_0 && waitResult != WAIT_ABANDONED) {
-        LOG_ERROR("Another instance is already running");
         CloseHandle(m_mutex);
         m_mutex = nullptr;
         return false;
@@ -37,6 +34,8 @@ bool App::initialize(HINSTANCE hInstance) {
     if (waitResult == WAIT_ABANDONED) {
         LOG_WARNING("Previous instance did not release mutex properly, taking ownership");
     }
+
+    LOG_INFO("Initializing application");
     
     // Get device info
     m_deviceId = DeviceInfo::getDeviceId();
@@ -163,17 +162,9 @@ void App::handleGranted(int seconds) {
 }
 
 void App::handleBlock(int seconds) {
-    if (seconds < 5) {
-        seconds = 5;
-    }
+    LOG_INFO("Will block after " + std::to_string(seconds) + " seconds");
     
-    LOG_INFO("Block in " + std::to_string(seconds) + " seconds");
-    
-    // Cancel any granted time
     m_timerManager->cancelGrantedTimer();
-    
-    m_overlay->setState(OverlayWindow::State::NOTIFICATION);
-    m_overlay->setNotificationText("Your access will be blocked in " + std::to_string(seconds) + " seconds.");
     
     m_timerManager->startBlockTimer(seconds, [this]() {
         onBlockExpired();
